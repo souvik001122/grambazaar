@@ -1,0 +1,17 @@
+# Render Backend Deployment Config
+# https://render.com
+
+# Build Command
+build: npm install
+
+# Start Command  
+start: npm start
+
+# Environment
+NODE_ENV: production
+
+# Health Check
+healthCheckPath: /
+
+# Auto-Deploy
+branch: main

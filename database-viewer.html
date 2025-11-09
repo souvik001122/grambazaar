@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GramBazaar Database Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        header p {
+            font-size: 1.125rem;
+            opacity: 0.9;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card p {
+            color: #666;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .tab {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .tab:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .tab.active {
+            background: white;
+            color: #667eea;
+            border-color: white;
+        }
+        
+        .content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-height: 400px;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .json-view {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            max-height: 600px;
+        }
+        
+        .json-view pre {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .refresh-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .product-list {
+            margin-top: 0.5rem;
+            padding-left: 1rem;
+        }
+        
+        .product-item {
+            font-size: 0.875rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🗄️ GramBazaar Database</h1>
+            <p>Real-time MongoDB Data Viewer</p>
+        </header>
+        
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <h3 id="shopCount">-</h3>
+                <p>Total Shops</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="productCount">-</h3>
+                <p>Total Products</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="activeShops">-</h3>
+                <p>Active Shops</p>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('shops')">🏪 Shops</button>
+            <button class="tab" onclick="showTab('products')">📦 Products</button>
+            <button class="tab" onclick="showTab('raw')">📄 Raw JSON</button>
+        </div>
+        
+        <div class="content">
+            <button class="refresh-btn" onclick="loadData()">🔄 Refresh Data</button>
+            
+            <div id="shops" class="section active">
+                <h2>Shops Overview</h2>
+                <div id="shopsContent" class="loading">Loading shops...</div>
+            </div>
+            
+            <div id="products" class="section">
+                <h2>Products Catalog</h2>
+                <div id="productsContent" class="loading">Loading products...</div>
+            </div>
+            
+            <div id="raw" class="section">
+                <h2>Raw Database JSON</h2>
+                <div id="rawContent" class="loading">Loading data...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000';
+        let dbData = {
+            shops: [],
+            products: []
+        };
+
+        async function loadData() {
+            try {
+                // Fetch shops
+                const shopsRes = await fetch(`${API_BASE}/api/shops`);
+                const shopsData = await shopsRes.json();
+                dbData.shops = Array.isArray(shopsData) ? shopsData : [];
+                
+                // Fetch products
+                const productsRes = await fetch(`${API_BASE}/api/products`);
+                const productsData = await productsRes.json();
+                dbData.products = Array.isArray(productsData) ? productsData : [];
+                
+                updateStats();
+                renderShops();
+                renderProducts();
+                renderRaw();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('shopsContent').innerHTML = 
+                    `<div class="error">Error loading data: ${error.message}</div>`;
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('shopCount').textContent = dbData.shops.length;
+            document.getElementById('productCount').textContent = dbData.products.length;
+            document.getElementById('activeShops').textContent = 
+                dbData.shops.filter(s => s.isActive).length;
+        }
+
+        function renderShops() {
+            const container = document.getElementById('shopsContent');
+            
+            if (dbData.shops.length === 0) {
+                container.innerHTML = '<p>No shops found in database.</p>';
+                return;
+            }
+            
+            let html = '<table><thead><tr>';
+            html += '<th>Shop Name</th><th>Category</th><th>City</th>';
+            html += '<th>Products</th><th>Rating</th><th>Status</th></tr></thead><tbody>';
+            
+            dbData.shops.forEach(shop => {
+                html += '<tr>';
+                html += `<td><strong>${shop.name}</strong><br><small>${shop._id}</small></td>`;
+                html += `<td><span class="badge badge-info">${shop.category}</span></td>`;
+                html += `<td>${shop.address?.city || 'N/A'}</td>`;
+                html += `<td>${shop.products?.length || 0} items`;
+                
+                if (shop.products && shop.products.length > 0) {
+                    html += '<div class="product-list">';
+                    shop.products.forEach(p => {
+                        html += `<div class="product-item">• ${p.name} - ₹${p.price}</div>`;
+                    });
+                    html += '</div>';
+                }
+                
+                html += '</td>';
+                html += `<td>⭐ ${shop.rating || 'N/A'}</td>`;
+                html += `<td><span class="badge badge-${shop.isActive ? 'success' : 'warning'}">`;
+                html += `${shop.isActive ? 'Active' : 'Inactive'}</span></td>`;
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function renderProducts() {
+            const container = document.getElementById('productsContent');
+            
+            if (dbData.products.length === 0) {
+                container.innerHTML = '<p>No products found in database.</p>';
+                return;
+            }
+            
+            let html = '<table><thead><tr>';
+            html += '<th>Product Name</th><th>Bengali Name</th><th>Price</th>';
+            html += '<th>Stock</th><th>Shop ID</th><th>Status</th></tr></thead><tbody>';
+            
+            dbData.products.forEach(product => {
+                html += '<tr>';
+                html += `<td><strong>${product.name}</strong><br><small>${product._id}</small></td>`;
+                html += `<td>${product.regionalNames?.bengali || '-'}</td>`;
+                html += `<td><strong>₹${product.price}</strong></td>`;
+                html += `<td>${product.stock} units</td>`;
+                html += `<td><small>${product.shopId}</small></td>`;
+                html += `<td><span class="badge badge-${product.isAvailable ? 'success' : 'warning'}">`;
+                html += `${product.isAvailable ? 'Available' : 'Unavailable'}</span></td>`;
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function renderRaw() {
+            const container = document.getElementById('rawContent');
+            const data = {
+                database: 'MongoDB (In-Memory)',
+                collections: {
+                    shops: dbData.shops,
+                    products: dbData.products
+                },
+                stats: {
+                    totalShops: dbData.shops.length,
+                    totalProducts: dbData.products.length,
+                    activeShops: dbData.shops.filter(s => s.isActive).length,
+                    availableProducts: dbData.products.filter(p => p.isAvailable).length
+                }
+            };
+            
+            container.innerHTML = `<div class="json-view"><pre>${JSON.stringify(data, null, 2)}</pre></div>`;
+        }
+
+        function showTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Load data on page load
+        loadData();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(loadData, 30000);
+    </script>
+</body>
+</html>
