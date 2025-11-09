@@ -1,3 +1,444 @@
-@media(min-width:1024px){
-  main{padding:2rem}
+/* ===================================
+   MOBILE-FIRST RESPONSIVE DESIGN
+   =================================== */
+
+/* Base - Mobile First (320px and up) */
+* {
+  box-sizing: border-box;
 }
+
+body {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Container adjustments */
+.container {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 1rem;
+  margin: 0 auto;
+}
+
+main {
+  padding: 1rem;
+  min-height: calc(100vh - 60px);
+}
+
+/* Navigation - Mobile */
+nav {
+  padding: 0.75rem 1rem;
+  flex-wrap: wrap;
+}
+
+nav .logo {
+  font-size: 1.25rem;
+}
+
+nav ul {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+nav a, nav button {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+/* Shop Grid - Mobile (1 column) */
+.shop-grid, .product-grid {
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* Cards */
+.shop-card, .product-card {
+  padding: 1rem;
+}
+
+.shop-card h3, .product-card h3 {
+  font-size: 1rem;
+}
+
+.shop-card p, .product-card p {
+  font-size: 0.875rem;
+}
+
+/* Buttons */
+button, .btn {
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Forms */
+form {
+  padding: 1.5rem 1rem;
+}
+
+input, select, textarea {
+  font-size: 16px; /* Prevents iOS zoom */
+  padding: 0.75rem;
+  width: 100%;
+}
+
+label {
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Cart - Mobile */
+.cart-items {
+  gap: 1rem;
+}
+
+.cart-item {
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1rem;
+}
+
+.cart-item img {
+  width: 100%;
+  max-width: 150px;
+  margin-bottom: 1rem;
+}
+
+.cart-summary {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  padding: 1rem;
+  background: white;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+/* Checkout - Mobile */
+.checkout-container {
+  flex-direction: column;
+}
+
+.checkout-form, .order-summary {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+/* Product Details - Mobile */
+.product-detail {
+  flex-direction: column;
+}
+
+.product-images {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.product-info {
+  width: 100%;
+}
+
+/* Modal - Mobile */
+.modal-content {
+  width: 95%;
+  max-width: 95%;
+  margin: 1rem;
+  padding: 1.5rem 1rem;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Tables - Mobile (horizontal scroll) */
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  min-width: 600px;
+  font-size: 0.875rem;
+}
+
+/* Admin Dashboard - Mobile */
+.admin-stats {
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.admin-tabs {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.admin-tab {
+  flex: 1 1 45%;
+  padding: 0.75rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* Profile - Mobile */
+.profile-sections {
+  grid-template-columns: 1fr;
+}
+
+/* Search Bar - Mobile */
+.search-bar {
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.search-bar input {
+  width: 100%;
+}
+
+.search-bar select {
+  width: 100%;
+}
+
+/* Filter Tags - Mobile */
+.filter-tags {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hero Section - Mobile */
+.hero {
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 1.75rem;
+  line-height: 1.2;
+}
+
+.hero p {
+  font-size: 1rem;
+}
+
+/* ===================================
+   TABLET (768px and up)
+   =================================== */
+@media (min-width: 768px) {
+  body {
+    font-size: 15px;
+  }
+
+  main {
+    padding: 1.5rem;
+  }
+
+  .container {
+    max-width: 720px;
+  }
+
+  /* Shop Grid - 2 columns */
+  .shop-grid, .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  button, .btn {
+    width: auto;
+    padding: 0.75rem 1.5rem;
+  }
+
+  form {
+    padding: 2rem;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .cart-item {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .cart-item img {
+    width: 120px;
+    margin-bottom: 0;
+    margin-right: 1rem;
+  }
+
+  .cart-summary {
+    position: static;
+    max-width: 400px;
+    margin-left: auto;
+  }
+
+  .admin-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-tab {
+    flex: 0 1 auto;
+    padding: 0.75rem 1.5rem;
+  }
+
+  .search-bar {
+    flex-direction: row;
+  }
+
+  .search-bar input {
+    flex: 1;
+  }
+
+  .search-bar select {
+    width: auto;
+  }
+
+  .modal-content {
+    width: 80%;
+    max-width: 600px;
+    padding: 2rem;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  table {
+    font-size: 1rem;
+  }
+}
+
+/* ===================================
+   DESKTOP (1024px and up)
+   =================================== */
+@media (min-width: 1024px) {
+  body {
+    font-size: 16px;
+  }
+
+  main {
+    padding: 2rem;
+  }
+
+  .container {
+    max-width: 960px;
+  }
+
+  /* Shop Grid - 3 columns */
+  .shop-grid, .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  nav {
+    padding: 1rem 2rem;
+  }
+
+  nav .logo {
+    font-size: 1.5rem;
+  }
+
+  nav a, nav button {
+    font-size: 1rem;
+  }
+
+  .checkout-container {
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  .checkout-form {
+    flex: 1;
+  }
+
+  .order-summary {
+    width: 400px;
+  }
+
+  .product-detail {
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  .product-images {
+    width: 50%;
+  }
+
+  .product-info {
+    width: 50%;
+  }
+
+  .admin-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .profile-sections {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero {
+    padding: 4rem 2rem;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+  }
+}
+
+/* ===================================
+   LARGE DESKTOP (1280px and up)
+   =================================== */
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1200px;
+  }
+
+  /* Shop Grid - 4 columns */
+  .shop-grid, .product-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  main {
+    padding: 2.5rem;
+  }
+
+  .modal-content {
+    max-width: 800px;
+  }
+}
+
+/* ===================================
+   TOUCH DEVICE OPTIMIZATIONS
+   =================================== */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger tap targets for mobile */
+  button, a, .btn, input[type="button"], input[type="submit"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Remove hover effects on touch devices */
+  button:hover, a:hover, .btn:hover {
+    transform: none;
+  }
+
+  /* Better scroll on touch */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ===================================
+   PRINT STYLES
+   =================================== */
+@media print {
+  nav, .cart-summary, .modal, button {
+    display: none !important;
+  }
+
+  main {
+    padding: 0;
+  }
+
+  * {
+    background: white !important;
+    color: black !important;
+  }
+}
+
