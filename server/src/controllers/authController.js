@@ -20,6 +20,8 @@ async function register(req, res, next) {
     // Create new user (password will be hashed automatically)
     const user = new User({ name, email, password, phone });
     await user.save();
+    
+    console.log('✅ New user registered:', email, '| ID:', user._id);
 
     // Send welcome email (async, don't wait for it)
     sendWelcomeEmail(email, name).catch(err => 
@@ -71,6 +73,7 @@ async function login(req, res, next) {
 
     // Verify password
     const isMatch = await user.comparePassword(password);
+    console.log('🔐 Login attempt:', email, '| Password match:', isMatch);
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
