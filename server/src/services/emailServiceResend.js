@@ -49,6 +49,10 @@ async function sendPasswordResetEmail(toEmail, resetToken, userName = 'User') {
   }
 
   try {
+    console.log('🔄 Attempting to send email via Resend...');
+    console.log('   API Key exists:', !!process.env.RESEND_API_KEY);
+    console.log('   API Key starts with:', process.env.RESEND_API_KEY?.substring(0, 8));
+    
     const result = await resend.emails.send({
       from: 'GramBazaar <onboarding@resend.dev>', // Will use default until you verify domain
       to: toEmail,
@@ -57,9 +61,11 @@ async function sendPasswordResetEmail(toEmail, resetToken, userName = 'User') {
     });
 
     console.log('✅ Password reset email sent via Resend to:', toEmail);
+    console.log('   Resend response:', JSON.stringify(result));
     return { success: true, messageId: result.id };
   } catch (error) {
     console.error('❌ Resend email error:', error);
+    console.error('   Error details:', JSON.stringify(error, null, 2));
     throw new Error('Failed to send email');
   }
 }
